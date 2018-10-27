@@ -229,7 +229,7 @@ public class OlingoSampleApp {
 
     public ODataFeed readFeed(Edm edm, String serviceUri, String contentType, String entitySetName)
             throws IOException, ODataException {
-        readFeed(edm, serviceUri, contentType, entitySetName, new HashMap<String, String>());
+        return readFeed(edm, serviceUri, contentType, entitySetName, new HashMap<String, String>());
     }
 
     public ODataEntry readEntry(Edm edm, String serviceUri, String contentType, String entitySetName, String keyValue)
@@ -243,7 +243,7 @@ public class OlingoSampleApp {
         // working with the default entity container
         EdmEntityContainer entityContainer = edm.getDefaultEntityContainer();
         // create absolute uri based on service uri, entity set name with its key property value and optional expanded relation name
-        String absolutUri = createUri(serviceUri, entitySetName, keyValue, expandRelationName);
+        String absolutUri = createUri(serviceUri, entitySetName, keyValue, new HashMap<String, String>());
 
         InputStream content = execute(absolutUri, contentType, HTTP_METHOD_GET);
 
