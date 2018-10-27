@@ -23,6 +23,7 @@ import org.apache.olingo.odata2.api.processor.ODataResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -30,6 +31,7 @@ import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OlingoSampleApp {
     public static final String HTTP_METHOD_PUT = "PUT";
@@ -142,8 +146,10 @@ public class OlingoSampleApp {
         String serviceUrl = "https://thebestrunsap2018z3d3pet6df.hana.ondemand.com/ro/sap/hackathon/team12/service.xsodata";
 
         Edm edm = app.readEdm(serviceUrl);
+        Map<String, String> params = new HashMap<>();
+        params.put("filter", "Code eq 'A0001'");
         System.out.println("\n----- Read Feed ------------------------------");
-        ODataFeed feed = app.readFeed(edm, serviceUrl, OlingoSampleApp.APPLICATION_JSON, "Delivery");
+        ODataFeed feed = app.readFeed(edm, serviceUrl, OlingoSampleApp.APPLICATION_JSON, "Article", params);
 
         System.out.println("Read: " + feed.getEntries().size() + " entries: ");
         for (ODataEntry entry : feed.getEntries()) {
@@ -359,9 +365,14 @@ public class OlingoSampleApp {
             absolutUri.append("/?");
         }
 
-        for (Map.Entry<String, String> param : params.entrySet()) {
-            absolutUri.append("$").append(param.getKey()).append("=").append(param.getValue()).append("&");
+        try {
+            for (Map.Entry<String, String> param : params.entrySet()) {
+                absolutUri.append("$").append(URLEncoder.encode(param.getKey(), "UTF-8")).append("=").append(URLEncoder.encode(param.getValue(), "UTF-8")).append("&");
+            }
+        } catch (UnsupportedEncodingException ex){
+            Logger.getLogger("Default").log(Level.SEVERE, null, ex);
         }
+        absolutUri.append("$format=json");
         return absolutUri.toString();
     }
 
