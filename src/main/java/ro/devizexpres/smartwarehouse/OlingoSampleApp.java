@@ -144,7 +144,6 @@ public class OlingoSampleApp {
 
         OlingoSampleApp app = new OlingoSampleApp();
         String serviceUrl = "https://thebestrunsap2018z3d3pet6df.hana.ondemand.com/ro/sap/hackathon/team12/service.xsodata";
-
         Edm edm = app.readEdm(serviceUrl);
         Map<String, String> params = new HashMap<>();
         params.put("filter", "Code eq 'A0001'");
@@ -159,7 +158,7 @@ public class OlingoSampleApp {
         }
     }
 
-    private static void print(String content) {
+    public static void print(String content) {
         System.out.println(content);
     }
 
@@ -167,7 +166,7 @@ public class OlingoSampleApp {
         return prettyPrint(createdEntry.getProperties(), 0);
     }
 
-    private static String prettyPrint(Map<String, Object> properties, int level) {
+    public static String prettyPrint(Map<String, Object> properties, int level) {
         StringBuilder b = new StringBuilder();
         Set<Map.Entry<String, Object>> entries = properties.entrySet();
 
