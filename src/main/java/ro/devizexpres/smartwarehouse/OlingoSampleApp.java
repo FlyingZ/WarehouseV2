@@ -163,7 +163,7 @@ public class OlingoSampleApp {
         System.out.println(content);
     }
 
-    private static String prettyPrint(ODataEntry createdEntry) {
+    public static String prettyPrint(ODataEntry createdEntry) {
         return prettyPrint(createdEntry.getProperties(), 0);
     }
 
@@ -361,9 +361,7 @@ public class OlingoSampleApp {
             absolutUri.append("(").append(id).append(")");
         }
 
-        if (params.entrySet().size() > 0) {
-            absolutUri.append("/?");
-        }
+        absolutUri.append("/?");        
 
         try {
             for (Map.Entry<String, String> param : params.entrySet()) {
