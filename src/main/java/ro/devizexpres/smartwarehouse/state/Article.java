@@ -38,7 +38,7 @@ public class Article {
         this.cod = cod;
     }
 
-    public double getPalletQuantity() {
+    public int getPalletQuantity() {
         return palletQuantity;
     }
 
@@ -73,6 +73,8 @@ public class Article {
     public void setPalletVolume(BigDecimal palletVolume) {
         this.palletVolume = palletVolume;
     }
+    
+    
     
 
     /*

@@ -5,6 +5,9 @@
  */
 package ro.devizexpres.smartwarehouse.state;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author robert.damian
@@ -29,13 +32,20 @@ public class ArticlesStock implements Comparable<ArticlesStock> {
         return this.articleCode.equals(articleCode);
     }
     
-    public boolean add(int amount) {
+    public int add(int amount) {
+        if (amount < 0) {
+            Logger.getLogger(ArticlesStock.class.getName())
+                    .log(Level.SEVERE, "Added negative amount");
+        }
+        int remaining;
         if (currentQuantity + amount > maxQuantity) {
-            return false;
+            remaining = currentQuantity + amount - maxQuantity;
+            currentQuantity = maxQuantity;
+            return remaining;
         }
         
         currentQuantity += amount;
-        return true;
+        return 0;
     }
     
     public boolean forceAdd(int amount) {
@@ -57,4 +67,23 @@ public class ArticlesStock implements Comparable<ArticlesStock> {
         System.out.println(prefix + "Stock for " + articleCode + ", currentQuantity = " + currentQuantity);
     }
     
+    public int getArticles(int amount) {
+        if (amount < 0) {
+            Logger.getLogger(ArticlesStock.class.getName())
+                    .log(Level.SEVERE, "Received order for negative amount {0}", amount);
+        }
+        
+        int delivered;
+        if (amount > currentQuantity) {
+            delivered = currentQuantity;
+            currentQuantity = 0;
+            return delivered;
+        }
+        currentQuantity -= amount;
+        return amount;
+    }
+    
+    public int getCurrentQuantity() {
+        return currentQuantity;
+    }
 }

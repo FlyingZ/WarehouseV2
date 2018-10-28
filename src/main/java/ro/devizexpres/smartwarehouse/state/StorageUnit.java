@@ -46,8 +46,13 @@ public class StorageUnit {
                 .collect(Collectors.toList());
     }
     
-    public boolean add(String articleCod, int amount) {
-        return getStocksFor(articleCod).stream().map((stock) -> stock.add(amount)).anyMatch((isOk) -> (isOk));
+    public int add(String articleCod, int amount) {
+        int remaining = amount;
+        for (ArticlesStock s : articlesStockSet) {
+            remaining = s.add(remaining);   
+        }
+        
+        return remaining;
     }
     
     public boolean forceAdd(String articleCod, int amount) {
@@ -69,5 +74,27 @@ public class StorageUnit {
         for (ArticlesStock s : articlesStockSet) {
             s.print(identation + 1);
         }
+    }
+    
+    public int getArticles(String articleCod, int amount) {
+        int retrievedFromUnit = 0;
+        for (ArticlesStock s : articlesStockSet) {
+            int retrieved = s.getArticles(amount);
+            retrievedFromUnit += retrieved;
+            
+            if (retrievedFromUnit == amount) {
+                return amount;
+            }
+            
+        }
+        
+        return retrievedFromUnit;
+    }
+    
+    public int readAvailableUnits(String articleCod) {
+        return articlesStockSet.stream()
+                .filter(s -> s.contains(articleCod))
+                .mapToInt(s -> s.getCurrentQuantity())
+                .sum();
     }
 }
